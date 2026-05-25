@@ -79,13 +79,11 @@ const App = () => {
     const copy = [...votes]
     copy[selected] += 1
     setVotes(copy)
-    //FindMostVotes({num: 0})
   }
 
   const FindMostVotes = ({num}) => {
     let count = 0;
     for(let i = 0; i < votes.length; i++){
-      console.log(i+" HERE " + votes[i]);
       if(votes[i] > num){
         num = votes[i]
         count = i
