@@ -1,54 +1,83 @@
 import { useState } from 'react'
-// import reactLogo from './assets/react.svg'
-// import viteLogo from './assets/vite.svg'
-// import heroImg from './assets/hero.png'
-// import './App.css'
-import Note from './components/Note'
-//import Course from './components/Course'
 
-const App = (props) => {
-  const [notes, setNotes] = useState(props.notes)
-  const [newNote, setNewNote] = useState('')
-  const [showAll, setShowAll] = useState(true)
+const App = () => {
+  const [persons, setPersons] = useState([
+    { name: 'Arto Hellas', number: '040-123456', id: 1 },
+    { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
+    { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
+    { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 }
+  ]) 
+  const [newName, setNewName] = useState('')
+  const [newNumber, setNewNumber] = useState('')
 
-  const addNote = (event) => {
+  const addInfo = (event) => {
     event.preventDefault()
-    const noteObject = {
-      content: newNote,
-      important: Math.random() < 0.5,
-      id: String(notes.length + 1),
+    const personToAdd = {
+      name: newName,
+      number: newNumber
     }
-
-    setNotes(notes.concat(noteObject))
-    setNewNote('')
+    const list = persons.filter(person => {
+      return person.name === personToAdd.name
+    })
+    if(list.length != 0){
+      alert(`${newName} is already added to the phonebook`);
+    }
+    else{
+      setPersons(persons.concat(personToAdd))
+      setNewName('')
+      setNewNumber('')
+    }    
+  }
+  const handleNameChange = (event) => {
+    setNewName(event.target.value)
+  }
+  const handlePhoneChange = (event) => {
+    setNewNumber(event.target.value)
   }
 
-  const handleNoteChange = (event) => {
-    console.log(event.target.value);
-    setNewNote(event.target.value);
+  const filterName = (event) => {
+    setSearchName(event.target.value);
   }
-  const notesToShow = showAll ? notes : notes.filter(note => note.important);
+  const [searchName, setSearchName] = useState('');
+
+  const ListofNames = ( { name } ) => {
+    let list = persons.filter((person) => {
+      return person.name.toLowerCase() === name
+    })
+    return (
+     <div>
+      {list.map((person) =>
+        <p>{person.name} {person.number}</p>
+      )}
+     </div>
+    )
+  }
 
   return (
     <div>
-      <h1>Notes</h1>
+      <h2>Phonebook</h2>
       <div>
-        <button onClick={() => setShowAll(!showAll)}>
-          show {showAll ? 'important': 'all'}
-        </button>
+        filter shown with <input value={searchName} onChange={filterName} /> 
+        <ListofNames name={searchName} />
       </div>
-      <ul>
-        {notesToShow.map(note => 
-          <Note key={note.id} note={note} />
-        )}
-      </ul>
-      <form onSubmit={addNote}>
-        <input value={newNote} onChange={handleNoteChange}/>
-        <button type="submit">save</button>
+      <h2>add a new</h2>
+      <form onSubmit={addInfo}>
+        <div>
+          name: <input placeholder='Write name here' value={newName} onChange={handleNameChange}/>
+        </div>
+        <div>
+          number: <input placeholder="Write number here" value={newNumber} onChange={handlePhoneChange}/>
+        </div>
+        <div>
+          <button type="submit">add</button>
+        </div>
       </form>
+      <h2>Numbers</h2>
+      {persons.map((person, i) => 
+        <p key={i}>{person.name} {person.number}</p>
+      )}
     </div>
   )
-  
 }
 
 export default App
