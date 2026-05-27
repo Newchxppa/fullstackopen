@@ -1,4 +1,9 @@
 import { useState } from 'react'
+import Persons from './components/Persons'
+import PersonForm from './components/PersonForm'
+import Filter from './components/Filter'
+
+
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -9,7 +14,6 @@ const App = () => {
   ]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
-
   const addInfo = (event) => {
     event.preventDefault()
     const personToAdd = {
@@ -17,7 +21,7 @@ const App = () => {
       number: newNumber
     }
     const list = persons.filter(person => {
-      return person.name === personToAdd.name
+      return person.name.toLowerCase() === personToAdd.name.toLowerCase()
     })
     if(list.length != 0){
       alert(`${newName} is already added to the phonebook`);
@@ -34,48 +38,24 @@ const App = () => {
   const handlePhoneChange = (event) => {
     setNewNumber(event.target.value)
   }
-
   const filterName = (event) => {
     setSearchName(event.target.value);
   }
   const [searchName, setSearchName] = useState('');
 
-  const ListofNames = ( { name } ) => {
-    let list = persons.filter((person) => {
-      return person.name.toLowerCase() === name
-    })
-    return (
-     <div>
-      {list.map((person) =>
-        <p>{person.name} {person.number}</p>
-      )}
-     </div>
-    )
-  }
-
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        filter shown with <input value={searchName} onChange={filterName} /> 
-        <ListofNames name={searchName} />
-      </div>
-      <h2>add a new</h2>
-      <form onSubmit={addInfo}>
-        <div>
-          name: <input placeholder='Write name here' value={newName} onChange={handleNameChange}/>
-        </div>
-        <div>
-          number: <input placeholder="Write number here" value={newNumber} onChange={handlePhoneChange}/>
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
-      {persons.map((person, i) => 
-        <p key={i}>{person.name} {person.number}</p>
-      )}
+      
+      <Filter value={searchName} people={persons} filter={filterName}  />
+     
+      <h3>Add a new</h3>
+      <PersonForm submit={addInfo} valueName={newName} changeName={handleNameChange} valueNum={newNumber} changeNum={handlePhoneChange}/>
+      
+
+      <h3>Numbers</h3>
+      <Persons persons={persons} />
+      
     </div>
   )
 }
