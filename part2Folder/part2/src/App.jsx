@@ -1,84 +1,98 @@
 import { useState, useEffect } from 'react'
-import Note from './components/Note'
-import noteService from './services/notes'
+import Persons from './components/Persons'
+import PersonForm from './components/PersonForm'
+import Filter from './components/Filter'
+import peopleService from './services/people'
 
 const App = () => {
-  const [notes, setNotes] = useState([])
-  const [newNote, setNewNote] = useState('')
-  const [showAll, setShowAll] = useState(true)
+  const [persons, setPersons] = useState([])
+  const [newName, setNewName] = useState('')
+  const [newNumber, setNewNumber] = useState('')
+  const [searchName, setSearchName] = useState('')
 
-   useEffect(() =>{
-    noteService
+
+  const hook = () => {
+    peopleService
       .getAll()
-      .then(initialNotes => {
-        setNotes(initialNotes)
+      .then(initialPeople => {
+        setPersons(initialPeople)
       })
-  }, [])
-
-  const toggleImportanceOf = id => {
-    const note = notes.find(n => n.id === id);
-    const changedNote = {...note, important: !note.important}
-    
-   noteService
-    .update(id, changedNote)
-    .then(returnedNote => {
-      setNotes(notes.map(note => note.id === id ? returnedNote : note))
-    })
-    .catch(error => {
-      alert(
-        `the note '${note.content}' was already deleted from server`
-      )
-      setNotes(notes.filter(n => n.id !== id))
-    })
-
-    console.log(`importance of ${id} needs to be toggled`);
   }
-
- 
+  useEffect(hook, [])
   
 
-  const addNote = (event) => {
+  const addInfo = (event) => {
     event.preventDefault()
-    const noteObject = {
-      content: newNote,
-      important: Math.random() > 0.5,
+    const personToAdd = {
+      name: newName,
+      number: newNumber
     }
+    const list = persons.filter(person => {
+      return person.name.toLowerCase() === personToAdd.name.toLowerCase()
+    })
+    if(list.length != 0){
+      if(window.confirm(`${personToAdd.name} is already added to phonebook, replace the old number with a new one?`)){
+        
+      const findPerson = persons.find(person => person.name === personToAdd.name);
 
-    noteService
-      .create(noteObject)
-      .then(returnedNote => {
-        setNotes(notes.concat(returnedNote))
-        setNewNote('')
-      })
-   
-    
+      const changeInfo = {...findPerson, number: personToAdd.number}
+
+      const updatePeople = persons.map(person => person.name === personToAdd.name ? changeInfo : person)
+
+      peopleService
+        .update(findPerson.id, personToAdd)
+        .then(person => {
+          setPersons(updatePeople)
+          setNewName('')
+          setNewNumber('')
+        })
+      }
+      else{
+        alert("Please change name.")
+      }
+    }
+    else{
+      peopleService
+        .create(personToAdd)
+        .then(person => {
+          setPersons(persons.concat(person))
+          setNewName('')
+          setNewNumber('')
+        })
+      
+    }
   }
 
-  const handleNoteChannge = (event) => {
-    setNewNote(event.target.value)
+  const handleNameChange = (event) => {
+    setNewName(event.target.value);
   }
-  
-  const notesToShow = showAll ? notes : notes.filter(note => note.important);
+  const handlePhoneChange = (event) => {
+    setNewNumber(event.target.value)
+  }
+  const filterName = (event) => {
+    setSearchName(event.target.value)
+  }
 
+  const deletePerson = (person) => {
+    if(window.confirm(`Are you sure you want to delete ${person.name}`)){
+      peopleService.remove(person.id)
+      location.reload();
+    }
+  }
   
 
   return (
     <div>
-      <h1>Notes</h1>
+      <h2>Phonebook</h2>
 
-      <button onClick={() => setShowAll(!showAll)}>
-        show {showAll ? 'important' : 'all'}
-      </button>
-      <ul>
-        {notesToShow.map(note => 
-          <Note key={note.id} note={note} toggleImportance={() => toggleImportanceOf(note.id)} />
-        )}
-      </ul>
-      <form onSubmit={addNote}>
-        <input value={newNote} onChange={handleNoteChannge} />
-        <button type="submit">save</button>
-      </form>
+      <Filter value={searchName} people={persons} filter={filterName} />
+      
+      <h3>Add a new</h3>
 
+      <PersonForm submit={addInfo} valueName={newName} changeName={handleNameChange} valueNum={newNumber} changeNum={handlePhoneChange} />
+
+      <h3>Numbers</h3>
+      <Persons persons={persons} deletePerson={deletePerson} />
     </div>
 
   )
