@@ -1,132 +1,92 @@
 import { useState, useEffect } from 'react'
-import Persons from './components/Persons'
-import PersonForm from './components/PersonForm'
-import Filter from './components/Filter'
-import peopleService from './services/people'
-import Notification from './components/Notification'
+import axios from 'axios'
 
 
-const Message = ({text}) => {
-  if(text){
-    return(
-      <div className='addPersonNoti'>
-        {text}
-      </div>
-    )
+
+ const Displayitem = ({item}) => {
+    if(item){
+      if(item.length < 10 && item.length != 1){
+        return(
+        <div>
+          {item.map((place, i) => 
+          <div key={i}>
+            {place.name.common}            
+          </div>
+          )}
+        </div>
+        )
+      }
+      else if(item.length > 10){
+        return(
+          <div>
+            Too many matches, specify another filter
+          </div>
+        )
+      }
+      else if(item.length == 1){
+        const languages = Object.values(item[0].languages)
+        return (
+          <div>
+            <h1>{item[0].name.common}</h1>
+            Capital {item[0].capital[0]}
+            <br />
+            Area {item[0].area}
+            <h2>Languages</h2>
+            <ul>
+              {languages.map((lang,i) => 
+                <li key={i}>{lang}</li>
+              )}
+            </ul>
+             <img src={item[0].flags.png} /> 
+          </div>
+        )
+      }
+    }
+    return null
+
   }
-  
-  return null
-  
-  
-  
-}
 
 const App = () => {
-  const [persons, setPersons] = useState([])
-  const [newName, setNewName] = useState('')
-  const [newNumber, setNewNumber] = useState('')
-  const [searchName, setSearchName] = useState('')
-  const [message, setMessage] = useState(null)
-  const [errMessage, setErrMessage] = useState(null)
+  const [value, setValue] = useState('')
+  //const [country, setCountry] = useState(null)
+  const [display, setDisplay] = useState()
 
 
-  const hook = () => {
-    peopleService
-      .getAll()
-      .then(initialPeople => {
-        setPersons(initialPeople)
+
+  const handleChange = (event) => {
+    setValue(event.target.value)
+    axios
+      .get('https://studies.cs.helsinki.fi/restcountries/api/all')
+      .then(response => {
+        let list = []
+        for(let i = 0; i < response.data.length; i++){
+          if(response.data[i].name.common.toLowerCase().includes(event.target.value.toLowerCase())){
+            list.push(response.data[i])
+          }
+          if(list.length > 10){
+            break;
+          }
+        }
+        setDisplay(list)
       })
+    
   }
-  useEffect(hook, [])
 
-  
-  
-
-  const addInfo = (event) => {
+  const onSearch = (event) => {
     event.preventDefault()
-    const personToAdd = {
-      name: newName,
-      number: newNumber
-    }
-    const list = persons.filter(person => {
-      return person.name.toLowerCase() === personToAdd.name.toLowerCase()
-    })
-    if(list.length != 0){
-      if(window.confirm(`${personToAdd.name} is already added to phonebook, replace the old number with a new one?`)){
-        
-      const findPerson = persons.find(person => person.name === personToAdd.name);
-
-      const changeInfo = {...findPerson, number: personToAdd.number}
-
-      const updatePeople = persons.map(person => person.name === personToAdd.name ? changeInfo : person)
-      peopleService
-        .update(findPerson.id, personToAdd)
-        .then(person => {
-          setPersons(updatePeople)
-          setNewName('')
-          setNewNumber('')     
-        })
-        .catch(error => {
-          setErrMessage(`Information of ${personToAdd.name} has already been removed from the server`)
-          setTimeout(() => {
-            setErrMessage(null)
-          }, 4500)
-        })
-      }
-      else{
-        alert("Please change name.")
-      }
-    }
-    else{
-      peopleService
-        .create(personToAdd)
-        .then(person => {
-          setMessage(`${person.name} was added`)
-          setTimeout(() => {
-            setMessage(null)
-          }, 2000)
-          setPersons(persons.concat(person))
-          setNewName('')
-          setNewNumber('')
-        })
-      
-    }
+    setCountry(value)
   }
-
-  const handleNameChange = (event) => {
-    setNewName(event.target.value);
-  }
-  const handlePhoneChange = (event) => {
-    setNewNumber(event.target.value)
-  }
-  const filterName = (event) => {
-    setSearchName(event.target.value)
-  }
-
-  const deletePerson = (person) => {
-    if(window.confirm(`Are you sure you want to delete ${person.name}`)){
-      peopleService.remove(person.id)
-      location.reload();
-    }
-  }
-  
 
   return (
     <div>
-      <h2>Phonebook</h2>
-      <Message text={message} />
-      <Notification message={errMessage} />
-      <Filter value={searchName} people={persons} filter={filterName} />
+      <form onSubmit={onSearch}>
+        find countries: <input value={value} onChange={handleChange} />
+       
+      </form>
+      <Displayitem item={display} />
       
-      <h3>Add a new</h3>
-
-      <PersonForm submit={addInfo} valueName={newName} changeName={handleNameChange} valueNum={newNumber} changeNum={handlePhoneChange} />
-
-      <h3>Numbers</h3>
-      <Persons persons={persons} deletePerson={deletePerson} />
     </div>
-
   )
-
 }
+
 export default App
