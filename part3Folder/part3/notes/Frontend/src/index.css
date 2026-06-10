@@ -18,13 +18,3 @@ h1 {
   padding: 10px;
   margin-bottom: 10px;
 }
-
-.addPersonNoti{
-  font-size: 20px;
-  background: rgb(179, 179, 179);
-  color: green;
-  border-style: solid;
-  border-radius: 5px;
-  margin-bottom: 10px;
-  padding: 10px;
-}
