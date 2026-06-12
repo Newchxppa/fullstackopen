@@ -10,6 +10,7 @@ lerna-debug.log*
 # Dependencies and Build Outputs
 node_modules/
 dist-ssr/
+.env
 
 # Environment and Secrets
 *.local

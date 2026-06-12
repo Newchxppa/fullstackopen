@@ -1,4 +1,4 @@
-GET http://localhost:3001/api/notes 
+GET http://localhost:3001/api/persons 
 ###
 POST http://localhost:3001/api/notes 
 Content-Type: application/json
@@ -16,3 +16,6 @@ Content-Type: application/json
   "name": "Ada Simpson",
   "number" : "889-888-888"
 }
+
+###
+DELETE http://localhost:3001/api/persons/6a2c316444630b1cee1d981f
