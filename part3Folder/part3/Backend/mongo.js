@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 
-if(process.argv.length < 5 && process.argv.length != 3){
+if(process.argv.length < 5 && process.argv.length !== 3){
   console.log('Include person name and phone number after password in order to save info. Ex: node mongo.js <password> Ada 402-234-2345')
   process.exit(1)
 }
@@ -19,28 +19,28 @@ mongoose.set('strictQuery', false)
 mongoose.connect(url, { family : 4 })
 
 const personSchema = new mongoose.Schema({
-  name: String, 
+  name: String,
   number: String,
 })
 
 const Person = mongoose.model('Person', personSchema)
 
-if(process.argv.length == 3){
-  console.log("phonebook:");
+if(process.argv.length === 3){
+  console.log('phonebook:')
   Person.find({}).then(persons => {
     persons.forEach(person => {
-      console.log(person.name, person.number);
+      console.log(person.name, person.number)
     })
     mongoose.connection.close()
   })
-  .catch(error => {
-    console.log(error);
-    process.exit(1)
-  })
+    .catch(error => {
+      console.log(error)
+      process.exit(1)
+    })
 }
-else if(process.argv.length == 5){
+else if(process.argv.length === 5){
   const person = new Person({
-    name: String(personName), 
+    name: String(personName),
     number: String(personNumber),
   })
 
