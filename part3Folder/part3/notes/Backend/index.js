@@ -4,10 +4,10 @@ const app = express()
 const Note = require('./models/note')
 
 const requestLogger = (request, response, next) => {
-  console.log('Method:', request.method);
-  console.log('Path:   ', request.path);
-  console.log('Body:   ', request.body);
-  console.log('---');
+  console.log('Method:', request.method)
+  console.log('Path:   ', request.path)
+  console.log('Body:   ', request.body)
+  console.log('---')
   next()
 }
 
@@ -40,7 +40,7 @@ app.get('/api/notes/:id', (request, response, next) => {
     .catch(error => next(error))
 })
 
-app.delete('/api/notes/:id', (request, response, next) =>{ 
+app.delete('/api/notes/:id', (request, response, next) => {
   Note.findByIdAndDelete(request.params.id)
     .then(result => {
       response.status(204).end()
@@ -49,7 +49,7 @@ app.delete('/api/notes/:id', (request, response, next) =>{
 })
 
 app.put('/api/notes/:id', (request, response, next) => {
-  const { content, important } = request.body 
+  const { content, important } = request.body
 
   Note.findById(request.params.id)
     .then(note => {
@@ -57,7 +57,7 @@ app.put('/api/notes/:id', (request, response, next) => {
         return response.status(404).end()
       }
 
-      note.content = content 
+      note.content = content
       note.important = important
 
       return note.save().then((updatedNote) => {
@@ -66,7 +66,7 @@ app.put('/api/notes/:id', (request, response, next) => {
     })
     .catch(error => next(error))
 })
-app.post('/api/notes', (request, response) => {
+app.post('/api/notes', (request, response, next) => {
   const body = request.body
 
   if(!body.content){
@@ -75,7 +75,7 @@ app.post('/api/notes', (request, response) => {
     })
   }
   const note = new Note({
-    content: body.content, 
+    content: body.content,
     important: body.important || false,
   })
 
@@ -110,5 +110,5 @@ app.use(errorHandler)
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`)
 })
