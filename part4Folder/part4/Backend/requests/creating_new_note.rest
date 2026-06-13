@@ -1,0 +1,18 @@
+GET http://localhost:3001/api/notes 
+###
+POST http://localhost:3001/api/notes 
+Content-Type: application/json
+
+{
+  "content": "REST is good in testing backend",
+  "important": true
+}
+
+###
+PUT http://localhost:3001/api/notes/6a29ed426fec0e880aacb012
+Content-Type: application/json
+
+{
+  "content": "less", 
+  "important": false
+}
