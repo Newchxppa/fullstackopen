@@ -1,16 +1,14 @@
-/*eslint-disable no-unused-vars*/
 import { useState } from "react"
-
-
-
-
-
+import BlogForm from "./components/BlogForm"
+import DisplayBlogs from "./components/DisplayBlogs"
+import './App.css'
 
 function App() {
   const [blogs, setBlogs] = useState([])
   const [blogTitle, setTitle] = useState('')
   const [blogAuthor, setAuthor] = useState('')
   const [url, setURL] = useState('')
+  const [votes, setVotes] = useState([])
 
 
   const addBlog = (event) => {
@@ -21,7 +19,7 @@ function App() {
       author: blogAuthor,
       link: url,
     }
-
+    setVotes(votes.concat(0))
     setBlogs(blogs.concat(newBlog))
     setTitle('')
     setAuthor('')
@@ -29,46 +27,32 @@ function App() {
   }
 
   const handleTitle = (event) => {
-    console.log(event.target.value);
     setTitle(event.target.value)
   }
 
   const handleAuthor = (event) => {
-    console.log(event.target.value)
     setAuthor(event.target.value)
   }
 
   const handleURl = (event) => {
-    console.log(event.target.value);
     setURL(event.target.value)
+  }
+
+  const upvoteBlog = (index) => {
+    const copy = [...votes]
+    copy[index] += 1
+    setVotes(copy)
   }
 
   return (
     <div>
-      <h1>Save your favorite blogs!</h1>
-      <form onSubmit={addBlog}>
-        <div>
-          Enter Title <input value={blogTitle} onChange={handleTitle}/>
-          <br/>
-          Enter Author <input value={blogAuthor} onChange={handleAuthor}/>
-          <br/>
-          Enter URL <input value={url} onChange={handleURl} />
-          <br/>
-          <button>Submit</button>
-        </div>
-      </form>
+      <h1 className="app-Title">Blog Saver</h1>
+      <h3 className="app-SubTitle">Save your favorite blogs!</h3>
+
+      <BlogForm formSubmit={addBlog} blogTitle={blogTitle} handleTitle={handleTitle} blogAuthor={blogAuthor} handleAuthor={handleAuthor} blogUrl={url} handleUrl={handleURl} />
       <h2>Saved Blogs</h2>
-      <div>
-        {blogs.map((blog, i) => 
-          <div key={i}>
-            <p>Title: {blog.title}</p>
-            <p>Author: {blog.author}</p>
-            <p>Link: {blog.link}</p>
-            <button>upvote</button>
-            <br/>
-          </div>
-        )}
-      </div>
+      
+      <DisplayBlogs blogs={blogs} upVoteBlog={upvoteBlog} votes={votes} />
     
     </div>
   )
