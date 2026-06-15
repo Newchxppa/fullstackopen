@@ -1,6 +1,7 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import BlogForm from "./components/BlogForm"
 import DisplayBlogs from "./components/DisplayBlogs"
+import blogService from '../services/blogs'
 import './App.css'
 
 function App() {
@@ -11,6 +12,19 @@ function App() {
   const [votes, setVotes] = useState([])
 
 
+  useEffect(() => {
+    blogService.getAll()
+    .then((response) => {
+      const data = Array(response.length).fill(0)
+      response.map((blog, i) => {
+        data[i] = blog.likes
+      })
+      setVotes(data)
+      setBlogs(response)
+    })
+  }, [])
+
+
   const addBlog = (event) => {
     event.preventDefault()
 
@@ -18,12 +32,17 @@ function App() {
       title: blogTitle,
       author: blogAuthor,
       link: url,
+      likes: 0,
     }
-    setVotes(votes.concat(0))
-    setBlogs(blogs.concat(newBlog))
-    setTitle('')
-    setAuthor('')
-    setURL('')
+    blogService.create(newBlog)
+      .then(blog => {
+        setVotes(votes.concat(0))
+        setBlogs(blogs.concat(blog))
+        setTitle('')
+        setAuthor('')
+        setURL('')
+      })
+    
   }
 
   const handleTitle = (event) => {
@@ -38,10 +57,15 @@ function App() {
     setURL(event.target.value)
   }
 
-  const upvoteBlog = (index) => {
+  const upvoteBlog = (index, blog) => {
+    
     const copy = [...votes]
     copy[index] += 1
     setVotes(copy)
+
+    const updatedBlog = {...blog, likes: copy[index]}
+    blogService.update(blog.id, updatedBlog)
+
   }
 
   return (

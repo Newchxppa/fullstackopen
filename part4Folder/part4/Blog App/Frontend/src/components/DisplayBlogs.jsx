@@ -13,8 +13,8 @@ const DisplayBlogs = ({ blogs, upVoteBlog, votes }) => {
             <p className="blog-P">
               <span className="blog-Span">Link:</span> {blog.link}
             </p>
-            <span className="votes-Span">has {votes[i]} votes</span>
-          <button className="votes-Button" onClick={() => upVoteBlog(i)}>upvote</button>
+            <span className="votes-Span">{votes[i]} votes</span>
+          <button className="votes-Button" onClick={() => upVoteBlog(i, blog)}>upvote</button>
           </div>
         )}
 
