@@ -1,0 +1,7 @@
+GET http://localhost:3001/api/blogs/J6HT0lou5UI
+###
+GET http://localhost:3001/api/blogs
+
+###
+PUT http://localhost:3001/api/blogs/J6HT0lou5UI
+//Content-Type: application/json
