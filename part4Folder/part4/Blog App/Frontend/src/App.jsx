@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import BlogForm from "./components/BlogForm"
 import DisplayBlogs from "./components/DisplayBlogs"
-import blogService from '../services/blogs'
+import blogService from './services/blogs.js'
 import './App.css'
 
 function App() {
@@ -21,6 +21,9 @@ function App() {
       })
       setVotes(data)
       setBlogs(response)
+    })
+    .catch(error => {
+      console.log(error);
     })
   }, [])
 
@@ -64,7 +67,11 @@ function App() {
     setVotes(copy)
 
     const updatedBlog = {...blog, likes: copy[index]}
+    console.log(updatedBlog);
     blogService.update(blog.id, updatedBlog)
+      .then(response => {
+        setBlogs(blogs.map(item => (item.id === blog.id ? response : item)))
+      })
 
   }
 
