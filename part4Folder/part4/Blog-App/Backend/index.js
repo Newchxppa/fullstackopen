@@ -9,7 +9,7 @@ let blogs =  [
       "title": "The Art of Minimalist Code",
       "author": "Elena Rostova",
       "link": "https://dev-bytes.io/blog/art-of-minimalist-code",
-      "likes": 1,
+      "likes": 0,
       "id": "LDuxj2MzVnI"
     },
     {
