@@ -14,9 +14,18 @@ mongoose.connect(url, { family: 4 })
   })
 
 const blogSchema = new mongoose.Schema({
-  title: String, 
-  author: String, 
-  link: String,
+  title: {
+    type: String,
+    required: true
+  }, 
+  author:  {
+    type: String, 
+    required: true
+  },  
+  link:  {
+    type: String, 
+    required: true
+  },
   likes: Number,
   id: String,
 }) 

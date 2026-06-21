@@ -13,6 +13,9 @@ const errorHandler = (error, request, response, next) => {
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
   } 
+  else if (error.name === 'ValidationError') {
+    return response.status(400).json({ error: error.message })
+  }
 
   next(error)
 }
@@ -83,12 +86,8 @@ app.put('/api/blogs/:id', (request, response, next) => {
 }) 
 
 
-app.post('/api/blogs', (request, response) => {
+app.post('/api/blogs', (request, response, next) => {
   const body = request.body
-
-  if(!body.title || !body.author || !body.link){
-    return response.status(400).json({ error: 'Please provide all details!'} )
-  }
 
   const blog = new Blog({
     title: body.title,
@@ -98,9 +97,13 @@ app.post('/api/blogs', (request, response) => {
     likes: 0,
   })
 
-  blog.save().then(savedBlog => {
+  blog.save()
+    .then(savedBlog => {
     response.json(savedBlog)
-  })
+    })
+    .catch(error => {
+      next(error)
+    })
 })
 
 app.use(unknownEndpoint)
