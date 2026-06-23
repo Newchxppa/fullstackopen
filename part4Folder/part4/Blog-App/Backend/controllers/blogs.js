@@ -10,15 +10,9 @@ blogRouter.get('/info', (request, response) => {
   })
 })
 
-blogRouter.get('/', (request, response) => {
-  Blog.find({})
-    .then(blog => {
-      response.json(blog)
-    })
-    .catch(error => {
-      console.log(error)
-      response.status(500).end()
-    })
+blogRouter.get('/', async (request, response) => {
+  const blog = await Blog.find({})
+  response.json(blog)
 })
 
 blogRouter.get('/:id', (request, response, next) => {
@@ -50,7 +44,7 @@ blogRouter.put('/:id', (request, response, next) => {
     })
 })
 
-blogRouter.post('/', (request, response, next) => {
+blogRouter.post('/', async (request, response, next) => {
   const body = request.body
 
   const blog = new Blog({
@@ -61,13 +55,8 @@ blogRouter.post('/', (request, response, next) => {
     likes: 0,
   })
 
-  blog.save()
-    .then(savedBlog => {
-      response.json(savedBlog)
-    })
-    .catch(error => {
-      next(error)
-    })
+  const savedBlog = await blog.save()
+  response.status(201).json(savedBlog)
 })
 
 module.exports = blogRouter

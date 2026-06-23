@@ -62,7 +62,7 @@ const blogs = [
     __v: 3
   }
 ]
-console.log(favoriteBlog(blogs))
+//console.log(favoriteBlog(blogs))
 
 //Find the author with the most amount of blogs
 const mostBlogs = (blogs) => {
