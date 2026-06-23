@@ -5,11 +5,13 @@ const initialBlogs = [
     title: 'How Renewable Energy is Shaping Future Cities',
     author: 'Marcus Vance',
     link: 'https://www.ecotimes.com/articles/2026/03/renewable-energy-future-cities/',
+    likes: 0
   },
   {
     title: 'Understanding the Basics of Quantum Computing',
     author: 'Elena Rostova',
     link: 'https://www.techjournal.org/stories/2026/01/basics-of-quantum-computing/',
+    likes: 0
   }
 ]
 

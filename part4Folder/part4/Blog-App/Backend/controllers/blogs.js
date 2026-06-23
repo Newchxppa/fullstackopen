@@ -1,13 +1,12 @@
 const blogRouter = require('express').Router()
 const Blog = require('../models/blog')
 
-blogRouter.get('/info', (request, response) => {
-  Blog.countDocuments({}).then(result => {
-    response.send(`
+blogRouter.get('/info', async (request, response) => {
+  const blogCount = await Blog.countDocuments({})
+  response.send(`
       <h1>Blog Backend</h1>
-      <p>This blog contains ${result} blogs so far</p>
+      <p>This blog contains ${blogCount} blogs so far</p>
     `)
-  })
 })
 
 blogRouter.get('/', async (request, response) => {
@@ -15,36 +14,24 @@ blogRouter.get('/', async (request, response) => {
   response.json(blog)
 })
 
-blogRouter.get('/:id', (request, response, next) => {
-  Blog.findById(request.params.id)
-    .then(blog => {
-      if (blog) {
-        response.json(blog)
-      }
-      else{
-        response.status(404).end()
-      }
-    })
-    .catch(error => {
-      next(error)
-    })
+blogRouter.get('/:id', async (request, response) => {
+  const blog = await Blog.findById(request.params.id)
+  if (blog){
+    response.json(blog)
+  } else {
+    response.status(404).end
+  }
 })
 
-blogRouter.put('/:id', (request, response, next) => {
-  Blog.findById(request.params.id)
-    .then(blog => {
-      blog.likes = blog.likes + 1
+blogRouter.put('/:id', async (request, response) => {
+  const blog = await Blog.findById(request.params.id)
+  blog.likes = blog.likes + 1
 
-      return blog.save().then(updatedBlog => {
-        response.json(updatedBlog)
-      })
-    })
-    .catch(error => {
-      next(error)
-    })
+  const updatedBlog = await blog.save()
+  response.json(updatedBlog)
 })
 
-blogRouter.post('/', async (request, response, next) => {
+blogRouter.post('/', async (request, response) => {
   const body = request.body
 
   const blog = new Blog({

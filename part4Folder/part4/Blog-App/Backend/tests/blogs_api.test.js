@@ -13,6 +13,10 @@ beforeEach(async () => {
   await Blog.insertMany(helper.initialBlogs)
 })
 
+test('/info page is working', async () => {
+  await api.get('/api/blogs/info').expect(200)
+})
+
 test('blogs are returned as json', async () => {
   await api.get('/api/blogs')
     .expect(200)
@@ -83,6 +87,28 @@ describe('400 Bad request', () => {
     await api.post('/api/blogs')
       .send(newBlog2)
       .expect(400)
+  })
+})
+
+describe('PUT request', () => {
+  test('likes gets updated by one', async () => {
+    const newBlog = {
+      title: 'Deep Dive into Blockchain and Decentralized Finance',
+      author: 'Kenji Takahashi',
+      link: 'https://www.cryptofocus.net/defi/deep-dive-blockchain-finance/',
+      likes: 0
+    }
+    await api.post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    const blogInDB = await helper.blogsinDB()
+    let updateBlog = blogInDB[2]
+    await api.put(`/api/blogs/${updateBlog.id}`).expect(200)
+
+    const updatedBlogs = await helper.blogsinDB()
+    assert.strictEqual(updatedBlogs[2].likes, 1)
   })
 })
 
