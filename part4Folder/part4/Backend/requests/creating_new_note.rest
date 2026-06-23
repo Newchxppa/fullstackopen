@@ -4,8 +4,9 @@ POST http://localhost:3001/api/notes
 Content-Type: application/json
 
 {
-  "content": "REST is good in testing backend",
-  "important": true
+  "content": "Use lots of console.logs",
+  "important": true,
+  "userId": "6a3b041ba0dc85702bbfb059"
 }
 
 ###
@@ -15,4 +16,15 @@ Content-Type: application/json
 {
   "content": "less", 
   "important": false
+}
+
+
+###
+POST http://localhost:3001/api/users 
+Content-Type: application/json
+
+{
+  "username": "mluukkai",
+  "name": "Matti Luukkainen",
+  "password": "patched"
 }
