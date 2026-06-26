@@ -1,0 +1,26 @@
+{
+  "blogs": [
+    {
+      "title": "The Art of Minimalist Code",
+      "author": "Elena Rostova",
+      "link": "https://dev-bytes.io/blog/art-of-minimalist-code",
+      "likes": 1,
+      "id": "LDuxj2MzVnI"
+    },
+    {
+      "title": "State Management in 2026: Beyond the Hype",
+      "author": "Marcus Vance",
+      "link": "https://techstack-chronicles.com/state-management-2026",
+      "likes": 0,
+      "id": "3xna83n0cTw"
+    },
+    {
+      "title": "7 ways AI is transforming healthcare",
+      "author": "Madeleine North",
+      "link": "https://www.weforum.org/stories/2025/08/ai-transforming-global-health/",
+      "likes": 0,
+      "id": "J6HT0lou5UI"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
