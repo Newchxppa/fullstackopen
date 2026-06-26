@@ -1,0 +1,37 @@
+POST http://localhost:3001/api/notes 
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1sdXVra2FpIiwiaWQiOiI2YTNiMDQxYmEwZGM4NTcwMmJiZmIwNTkiLCJpYXQiOjE3ODIzMzA3ODR9.VrZP6l-qomNj9m0GJ3cqNKIzcZWoqvGUbPF42--D-_c
+
+{
+  "content": "Single page apps use token based auth",
+  "important": false
+}
+
+# ###
+# PUT http://localhost:3001/api/notes/6a29ed426fec0e880aacb012
+# Content-Type: application/json
+
+# {
+#   "content": "less", 
+#   "important": false
+# }
+
+
+# ###
+# POST http://localhost:3001/api/users 
+# Content-Type: application/json
+
+# {
+#   "username": "mluukkai",
+#   "name": "Matti Luukkainen",
+#   "password": "patched"
+# }
+
+###
+POST http://localhost:3001/api/login
+Content-Type: application/json
+
+{
+  "username": "mluukkai",
+  "password": "patched"
+}
