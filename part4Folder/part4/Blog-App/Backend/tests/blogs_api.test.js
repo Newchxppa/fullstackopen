@@ -112,6 +112,30 @@ describe('PUT request', () => {
   })
 })
 
+describe('Users test', () => {
+
+  test('missing password should return status code 400', async () => {
+    const newUser = {
+      username: 'Invalid user',
+      name: 'Invalid'
+    }
+
+    await api.post('/api/users').send(newUser).expect(400)
+  })
+
+  test('missing username should return status code 400', async () => {
+    const newUser = {
+      password: 'invalid password',
+      name: 'Invalid'
+    }
+
+    await api.post('/api/users').send(newUser).expect(400)
+  })
+
+
+})
+
+
 
 after(async () => {
   await mongoose.connection.close()

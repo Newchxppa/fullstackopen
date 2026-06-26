@@ -10,7 +10,7 @@ blogRouter.get('/info', async (request, response) => {
 })
 
 blogRouter.get('/', async (request, response) => {
-  const blog = await Blog.find({})
+  const blog = await Blog.find({}).populate('user', { username: 1, name: 1 })
   response.json(blog)
 })
 
@@ -33,6 +33,7 @@ blogRouter.put('/:id', async (request, response) => {
 
 blogRouter.post('/', async (request, response) => {
   const body = request.body
+  const user = request.user
 
   const blog = new Blog({
     title: body.title,
@@ -40,9 +41,13 @@ blogRouter.post('/', async (request, response) => {
     link: body.link,
     id: body.id,
     likes: 0,
+    user: user._id
   })
 
   const savedBlog = await blog.save()
+  user.blogs = user.blogs.concat(savedBlog._id)
+  await user.save()
+
   response.status(201).json(savedBlog)
 })
 
