@@ -1,5 +1,6 @@
 const blogRouter = require('express').Router()
 const Blog = require('../models/blog')
+const { usersExtractor } = require('../utils/middleware')
 
 blogRouter.get('/info', async (request, response) => {
   const blogCount = await Blog.countDocuments({})
@@ -31,16 +32,22 @@ blogRouter.put('/:id', async (request, response) => {
   response.json(updatedBlog)
 })
 
-blogRouter.post('/', async (request, response) => {
+blogRouter.post('/', usersExtractor ,async (request, response) => {
   const body = request.body
   const user = request.user
+
+  if(!user){
+    return response.status(401).json({
+      error: 'userId missing or not valid'
+    })
+  }
 
   const blog = new Blog({
     title: body.title,
     author: body.author,
     link: body.link,
     id: body.id,
-    likes: 0,
+    likes: body.likes ||  0,
     user: user._id
   })
 

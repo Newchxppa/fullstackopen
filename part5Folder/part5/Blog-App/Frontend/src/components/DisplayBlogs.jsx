@@ -2,6 +2,7 @@ const DisplayBlogs = ({ blogs, upVoteBlog, votes }) => {
   if(blogs.length != 0)
     return(
       <div>
+        <h2>Saved Blogs</h2>
         {blogs.map((blog, i) => 
           <div key={i}>
             <p className="blog-P">
@@ -14,7 +15,7 @@ const DisplayBlogs = ({ blogs, upVoteBlog, votes }) => {
               <span className="blog-Span">Link:</span> {blog.link}
             </p>
             <span className="votes-Span">{votes[i]} votes</span>
-          <button className="votes-Button" onClick={() => upVoteBlog(i, blog)}>upvote</button>
+            <button className="votes-Button" onClick={() => upVoteBlog(i, blog)}>upvote</button>
           </div>
         )}
 
