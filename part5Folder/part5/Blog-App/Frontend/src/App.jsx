@@ -1,13 +1,13 @@
 /* eslint-disable react-hooks/set-state-in-effect */
-import { useState, useEffect } from "react"
-import BlogForm from "./components/BlogForm"
-import DisplayBlogs from "./components/DisplayBlogs"
+import { useState, useEffect } from 'react'
+import BlogForm from './components/BlogForm'
+import DisplayBlogs from './components/DisplayBlogs'
 import blogService from './services/blogs.js'
 import './App.css'
-import LoginForm from "./components/LoginForm"
+import LoginForm from './components/LoginForm'
 import loginService from './services/login.js'
-import Notification from "./components/Notification.jsx"
-import Togglable from "./components/Togglable.jsx"
+import Notification from './components/Notification.jsx'
+import Togglable from './components/Togglable.jsx'
 
 function App() {
   const [blogs, setBlogs] = useState([])
@@ -19,18 +19,18 @@ function App() {
 
   useEffect(() => {
     blogService.getAll()
-    .then((response) => {
-      console.log(response);
-      const data = new Array(response.length)
-      response.map((blog, i) => {
-        data[i]= {likes: blog.likes, id: blog.id}
+      .then((response) => {
+        console.log(response)
+        const data = new Array(response.length)
+        response.map((blog, i) => {
+          data[i]= { likes: blog.likes, id: blog.id }
+        })
+        setVotes(data)
+        setBlogs(response)
       })
-      setVotes(data)
-      setBlogs(response)
-    })
-    .catch(error => {
-      console.log(error);
-    })
+      .catch(error => {
+        console.log(error)
+      })
   }, [])
 
   useEffect(() => {
@@ -49,23 +49,23 @@ function App() {
         setTimeout(() => {
           setErrMessage(null)
         }, 5000)
-        setVotes(votes.concat({likes: blog.likes, id: blog.id}))
+        setVotes(votes.concat({ likes: blog.likes, id: blog.id }))
         setBlogs(blogs.concat(blog))
       })
   }
 
   const upvoteBlog = (index, blog) => {
-    let copy = [...votes];
+    let copy = [...votes]
     copy = copy.map((item) => {
-      if(item.id === blog.id){  
-        return {...item, likes: item.likes + 1}
+      if(item.id === blog.id){
+        return { ...item, likes: item.likes + 1 }
       }
       return item
     })
 
     setVotes(copy)
-    
-    const updatedBlog = copy.find(item => item.id === blog.id);
+
+    const updatedBlog = copy.find(item => item.id === blog.id)
     blogService.update(blog.id, updatedBlog)
       .then(response => {
         setBlogs(blogs.map(item => (item.id === blog.id ? response : item)))
@@ -74,9 +74,9 @@ function App() {
 
   const displayBlogLikes = (id) => {
     let like = blogs.find((blog) => {
-      return blog.id === id;
+      return blog.id === id
     })
-    return like.likes;
+    return like.likes
   }
 
   const handleUsername = event => {
@@ -93,7 +93,7 @@ function App() {
     try{
       const user = await loginService.login({ username, password })
       window.localStorage.setItem('blogAppUser', JSON.stringify(user))
-      
+
       blogService.setToken(user.token)
       setUser(user)
       setUsername('')
@@ -118,12 +118,12 @@ function App() {
     if(window.confirm(`Are you sure you want to delete: '${blog.title}' by ${blog.author}?`)){
       blogService.deleteBlog(blog.id)
         .then(() => {
-          setBlogs(blogs => 
-            blogs.filter(item => item.id != blog.id)
+          setBlogs(blogs =>
+            blogs.filter(item => item.id !== blog.id)
           )
         })
     }
-     
+
   }
 
   const noteForm = () => (
@@ -147,8 +147,7 @@ function App() {
       {user && noteForm()}
       {user && <DisplayBlogs blogs={blogs} upVoteBlog={upvoteBlog} votes={votes} user={user} displayLike={displayBlogLikes} deleteBlog={deleteBlog} />}
 
-      
-    
+
     </div>
   )
 }
