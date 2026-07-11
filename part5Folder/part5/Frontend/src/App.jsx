@@ -19,7 +19,7 @@ const App = () => {
 
   const noteFormRef = useRef()
 
-  
+
   useEffect(() => {
     noteService
       .getAll()
@@ -37,7 +37,7 @@ const App = () => {
     }
   }, [])
 
-  
+
 
   const addNote = (noteObject) => {
     noteFormRef.current.toggleVisibility()
@@ -50,28 +50,28 @@ const App = () => {
 
 
   const toggleImportanceOf = id => {
-    const note = notes.find(n => n.id === id);
-    const changedNote = {...note, important: !note.important}
-    
-   noteService
-    .update(id, changedNote)
-    .then(returnedNote => {
-      setNotes(notes.map(note => (note.id === id ? returnedNote : note)))
-    })
-    .catch(error => {
-      setErrorMessage(
-        `Note '${note.content}' was already removed from server`
-      )
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
-      setNotes(notes.filter(n => n.id !== id))
-    })
+    const note = notes.find(n => n.id === id)
+    const changedNote = { ...note, important: !note.important }
+
+    noteService
+      .update(id, changedNote)
+      .then(returnedNote => {
+        setNotes(notes.map(note => (note.id === id ? returnedNote : note)))
+      })
+      .catch(error => {
+        setErrorMessage(
+          `Note '${note.content}' was already removed from server`
+        )
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+        setNotes(notes.filter(n => n.id !== id))
+      })
 
   }
 
-  
-  const notesToShow = showAll ? notes : notes.filter(note => note.important);
+
+  const notesToShow = showAll ? notes : notes.filter(note => note.important)
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -79,7 +79,7 @@ const App = () => {
     try {
       const user = await loginService.login({ username, password })
       window.localStorage.setItem('loggedNoteappUser', JSON.stringify(user))
-      
+
       noteService.setToken(user.token)
       setUser(user)
       setUsername('')
@@ -100,7 +100,7 @@ const App = () => {
   )
 
   const handleLogout = () => {
-    if(window.confirm("Are you sure you want to logout?")){
+    if(window.confirm('Are you sure you want to logout?')){
       localStorage.removeItem('loggedNoteappUser')
       location.reload()
     }
@@ -108,14 +108,14 @@ const App = () => {
 
   const loginForm = () => (
     <Togglable buttonLabel="login">
-      <LoginForm 
+      <LoginForm
         handleLogin={handleLogin}
         username={username}
         handleUsername={({ target }) => setUsername(target.value)}
-        handlePassword={({ target }) => setPassword(target.value)} 
+        handlePassword={({ target }) => setPassword(target.value)}
         password={password}
       />
-    </Togglable> 
+    </Togglable>
   )
 
   return (
@@ -134,17 +134,17 @@ const App = () => {
 
 
       <div>
-      <button onClick={() => setShowAll(!showAll)}>
-        show {showAll ? 'important' : 'all'}
-      </button>
+        <button onClick={() => setShowAll(!showAll)}>
+          show {showAll ? 'important' : 'all'}
+        </button>
       </div>
       <ul>
         {notesToShow.map(note => (
           <Note key={note.id} note={note} toggleImportance={() => toggleImportanceOf(note.id)} />
         ))}
       </ul>
-      
-    <Footer />
+
+      <Footer />
     </div>
 
   )
