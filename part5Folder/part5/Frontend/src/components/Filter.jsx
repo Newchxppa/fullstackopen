@@ -1,4 +1,4 @@
-const Filter = ( {value, people, filter} ) => {
+const Filter = ( { value, people, filter } ) => {
   let list = people.filter((person) => {
     for(let i = 0; i < value.length; i++){
       if(person.name.toLowerCase().includes(value.toLowerCase())){
@@ -9,7 +9,7 @@ const Filter = ( {value, people, filter} ) => {
   return (
     <div>
       filter shown with <input value={value} onChange={filter} />
-      {list.map((person, index) => 
+      {list.map((person, index) =>
         <p key={index}>{person.name} {person.number}</p>
       )}
     </div>
