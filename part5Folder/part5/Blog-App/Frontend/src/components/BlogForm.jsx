@@ -1,18 +1,36 @@
-const BlogForm = ({ formSubmit, blogTitle, handleTitle, blogAuthor, handleAuthor, blogUrl, handleUrl }) => {
+import { useState } from "react"
+const BlogForm = ({ createBlog }) => {
+  //formSubmit, blogTitle, handleTitle, blogAuthor, handleAuthor, blogUrl, handleUrl
+  const [blogTitle, setTitle] = useState('')
+  const [blogAuthor, setAuthor] = useState('')
+  const [url, setURL] = useState('')
+
+  const addForm = (event) => {
+    event.preventDefault()
+    createBlog({
+      title: blogTitle,
+      author: blogAuthor,
+      link: url
+    })
+    setTitle('')
+    setAuthor('')
+    setURL('')
+  }
+
   return (
     <div className="form-Div">
-      <form className="blog-Form" onSubmit={formSubmit}>
+      <form className="blog-Form" onSubmit={addForm}>
 
         <div className="input-Div">
-          Enter Title <input className="title-Input" value={blogTitle}  onChange={handleTitle} />
+          Enter Title <input className="title-Input" value={blogTitle}  onChange={event => setTitle(event.target.value)} />
         </div>
 
         <div className="input-Div">
-          Enter Author <input className="author-Input" value={blogAuthor} onChange={handleAuthor} />
+          Enter Author <input className="author-Input" value={blogAuthor} onChange={event => setAuthor(event.target.value)} />
         </div>
 
         <div className="input-Div">
-          Enter URL <input className="url-Input" value={blogUrl} onChange={handleUrl} />
+          Enter URL <input className="url-Input" value={url} onChange={event => setURL(event.target.value)} />
         </div>
 
         <button className="form-Submit-Button">Submit</button>

@@ -7,12 +7,10 @@ import './App.css'
 import LoginForm from "./components/LoginForm"
 import loginService from './services/login.js'
 import Notification from "./components/Notification.jsx"
+import Togglable from "./components/Togglable.jsx"
 
 function App() {
   const [blogs, setBlogs] = useState([])
-  const [blogTitle, setTitle] = useState('')
-  const [blogAuthor, setAuthor] = useState('')
-  const [url, setURL] = useState('')
   const [votes, setVotes] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -22,9 +20,10 @@ function App() {
   useEffect(() => {
     blogService.getAll()
     .then((response) => {
-      const data = Array(response.length).fill(0)
+      console.log(response);
+      const data = new Array(response.length)
       response.map((blog, i) => {
-        data[i] = blog.likes
+        data[i]= {likes: blog.likes, id: blog.id}
       })
       setVotes(data)
       setBlogs(response)
@@ -43,55 +42,41 @@ function App() {
     }
   }, [])
 
-  const addBlog = (event) => {
-    event.preventDefault()
-
-    const newBlog = {
-      title: blogTitle,
-      author: blogAuthor,
-      link: url,
-      likes: 0,
-    }
-    const copy = {...newBlog}
-    
-    blogService.create(newBlog)
+  const addBlog = (blogObject) => {
+    blogService.create(blogObject)
       .then(blog => {
-        setErrMessage(`Add: ${newBlog.title} by ${newBlog.author} has been added`)
+        setErrMessage(`Add: ${blogObject.title} by ${blogObject.author} has been added`)
         setTimeout(() => {
           setErrMessage(null)
         }, 5000)
-        setVotes(votes.concat(0))
+        setVotes(votes.concat({likes: blog.likes, id: blog.id}))
         setBlogs(blogs.concat(blog))
-        setTitle('')
-        setAuthor('')
-        setURL('')
       })
   }
 
-  const handleTitle = (event) => {
-    setTitle(event.target.value)
-  }
-
-  const handleAuthor = (event) => {
-    setAuthor(event.target.value)
-  }
-
-  const handleURl = (event) => {
-    setURL(event.target.value)
-  }
-
   const upvoteBlog = (index, blog) => {
-    
-    const copy = [...votes]
-    copy[index] += 1
-    setVotes(copy)
+    let copy = [...votes];
+    copy = copy.map((item) => {
+      if(item.id === blog.id){  
+        return {...item, likes: item.likes + 1}
+      }
+      return item
+    })
 
-    const updatedBlog = {...blog, likes: copy[index]}
-    console.log(updatedBlog);
+    setVotes(copy)
+    
+    const updatedBlog = copy.find(item => item.id === blog.id);
     blogService.update(blog.id, updatedBlog)
       .then(response => {
         setBlogs(blogs.map(item => (item.id === blog.id ? response : item)))
       })
+  }
+
+  const displayBlogLikes = (id) => {
+    let like = blogs.find((blog) => {
+      return blog.id === id;
+    })
+    return like.likes;
   }
 
   const handleUsername = event => {
@@ -123,15 +108,29 @@ function App() {
   }
 
   const handleLogout = () => {
-    console.log('hello');
     if(window.confirm('Are you sure you want to logout?')){
       window.localStorage.removeItem('blogAppUser')
       location.reload()
     }
   }
 
-  
+  const deleteBlog = (blog) => {
+    if(window.confirm(`Are you sure you want to delete: '${blog.title}' by ${blog.author}?`)){
+      blogService.deleteBlog(blog.id)
+        .then(() => {
+          setBlogs(blogs => 
+            blogs.filter(item => item.id != blog.id)
+          )
+        })
+    }
+     
+  }
 
+  const noteForm = () => (
+    <Togglable buttonLabel="create new blog" closeLabel="close">
+      <BlogForm createBlog={addBlog}/>
+    </Togglable>
+  )
 
   return (
     <div>
@@ -145,8 +144,8 @@ function App() {
           <button className="logout-Button" onClick={() => {handleLogout()}}>Log Out</button>
         </div>
       )}
-      {user && <BlogForm formSubmit={addBlog} blogTitle={blogTitle} handleTitle={handleTitle} blogAuthor={blogAuthor} handleAuthor={handleAuthor} blogUrl={url} handleUrl={handleURl} />}
-      {user && <DisplayBlogs blogs={blogs} upVoteBlog={upvoteBlog} votes={votes} />}
+      {user && noteForm()}
+      {user && <DisplayBlogs blogs={blogs} upVoteBlog={upvoteBlog} votes={votes} user={user} displayLike={displayBlogLikes} deleteBlog={deleteBlog} />}
 
       
     

@@ -53,6 +53,9 @@
 .login-Div{
   margin-top: 15px;
 }
+.form-Submit-Button{
+  margin-bottom: 5px;
+}
 
 .form-Submit-Button, .login-Button{
   border-radius: 3px;
@@ -66,6 +69,17 @@
   border-style: solid;
   border-width: 1px;
   border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.remove-BlogButton{
+  font-size: 12px;
+  border-radius: 5px;
+  border-width: 1.5px;
+  border-color: red;
+  margin-bottom: 8px;
+
+  cursor:pointer;
 }
 
 .logout-Button:hover{
@@ -114,6 +128,7 @@
   padding: 3px 5px 3px 5px;
   border-radius: 3px;
   border-width: 1px;
+  margin-right: 5px;
 }
 
 .votes-Button:hover{

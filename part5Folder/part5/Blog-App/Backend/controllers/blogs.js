@@ -58,4 +58,15 @@ blogRouter.post('/', usersExtractor ,async (request, response) => {
   response.status(201).json(savedBlog)
 })
 
+blogRouter.delete('/:id', usersExtractor, async (request, response) => {
+  const user = request.user
+  if(!user){
+    return response.status(401).json({
+      error: 'userId missing or not valid'
+    })
+  }
+  await Blog.findByIdAndDelete(request.params.id)
+  response.status(204).end()
+})
+
 module.exports = blogRouter

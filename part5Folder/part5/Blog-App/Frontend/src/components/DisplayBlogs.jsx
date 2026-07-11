@@ -1,4 +1,7 @@
-const DisplayBlogs = ({ blogs, upVoteBlog, votes }) => {
+import Togglable from "./Togglable"
+const DisplayBlogs = ({ blogs, upVoteBlog, deleteBlog, user, displayLike }) => {
+  blogs.sort((a, b) => b.likes - a.likes);
+  
   if(blogs.length != 0)
     return(
       <div>
@@ -8,17 +11,23 @@ const DisplayBlogs = ({ blogs, upVoteBlog, votes }) => {
             <p className="blog-P">
               <span className="blog-Span">Title:</span> {blog.title} 
             </p>
-            <p className="blog-P">
-              <span className="blog-Span">Author:</span> {blog.author}
-            </p>
-            <p className="blog-P">
-              <span className="blog-Span">Link:</span> {blog.link}
-            </p>
-            <span className="votes-Span">{votes[i]} votes</span>
-            <button className="votes-Button" onClick={() => upVoteBlog(i, blog)}>upvote</button>
+            <Togglable buttonLabel="view" closeLabel="hide">
+              <p className="blog-P">
+                <span className="blog-Span">Author:</span> {blog.author}
+              </p>
+              <p className="blog-P">
+                <span className="blog-Span">Link:</span> {blog.link}
+              </p>
+              <p className="blog-P">
+                <span className="blog-Span">Saved by:</span> {user.name} 
+              </p>
+              <button onClick={() => deleteBlog(blog)} className="remove-BlogButton">remove</button>
+              <br/>  
+              <span className="votes-Span">{displayLike(blog.id)} votes</span>
+              <button className="votes-Button" onClick={() => upVoteBlog(i, blog)}>upvote</button>
+            </Togglable>
           </div>
         )}
-
       </div>
     )
   else{
