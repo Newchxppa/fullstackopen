@@ -1,6 +1,5 @@
-import { useState } from "react"
+import { useState } from 'react'
 const BlogForm = ({ createBlog }) => {
-  //formSubmit, blogTitle, handleTitle, blogAuthor, handleAuthor, blogUrl, handleUrl
   const [blogTitle, setTitle] = useState('')
   const [blogAuthor, setAuthor] = useState('')
   const [url, setURL] = useState('')

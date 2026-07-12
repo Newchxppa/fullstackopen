@@ -11,10 +11,10 @@ const DisplayBlogs = ({ blogs, upVoteBlog, deleteBlog, user, displayLike }) => {
             <p className="blog-P">
               <span className="blog-Span">Title:</span> {blog.title}
             </p>
+            <p className="blog-P">
+              <span className="blog-Span">Author:</span> {blog.author}
+            </p>
             <Togglable buttonLabel="view" closeLabel="hide">
-              <p className="blog-P">
-                <span className="blog-Span">Author:</span> {blog.author}
-              </p>
               <p className="blog-P">
                 <span className="blog-Span">Link:</span> {blog.link}
               </p>
