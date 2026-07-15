@@ -20,7 +20,6 @@ function App() {
   useEffect(() => {
     blogService.getAll()
       .then((response) => {
-        console.log(response)
         const data = new Array(response.length)
         response.map((blog, i) => {
           data[i]= { likes: blog.likes, id: blog.id }
@@ -38,6 +37,7 @@ function App() {
     if(loggedInUser){
       const user = JSON.parse(loggedInUser)
       setUser(user)
+      console.log('USER:' ,user)
       blogService.setToken(user.token)
     }
   }, [])
