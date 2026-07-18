@@ -1,21 +1,22 @@
 /* eslint-disable react-hooks/set-state-in-effect */
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material'
+
 import { Link } from 'react-router-dom'
 import Togglable from './Togglable'
 import LoginForm from './LoginForm'
 import noteService from '../services/notes'
 import loginService from '../services/login'
-import Notification from './Notification'
+//import Notification from './Notification'
 
 
 const NoteList =  ({ notes }) => {
   const [showAll, setShowAll] = useState(true)
-  const [errorMessage, setErrorMessage] = useState(null)
+  //const [errorMessage, setErrorMessage] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
-  const noteFormRef = useRef()
   const notesToShow = showAll ? notes : notes.filter(note => note.important)
 
   useEffect(() => {
@@ -37,9 +38,9 @@ const NoteList =  ({ notes }) => {
       setPassword('')
     }
     catch {
-      setErrorMessage('wrong credentials')
+      //setErrorMessage('wrong credentials')
       setTimeout(() => {
-        setErrorMessage(null)
+        //setErrorMessage(null)
       }, 5000)
     }
   }
@@ -51,26 +52,26 @@ const NoteList =  ({ notes }) => {
     }
   }
 
-  const toggleImportanceOf = id => {
-    const note = notes.find(n => n.id === id)
-    const changedNote = { ...note, important: !note.important }
+  // const toggleImportanceOf = id => {
+  //   const note = notes.find(n => n.id === id)
+  //   const changedNote = { ...note, important: !note.important }
 
-    noteService
-      .update(id, changedNote)
-      .then(returnedNote => {
-        //setNotes(notes.map(note => (note.id === id ? returnedNote : note)))
-      })
-      .catch(error => {
-        setErrorMessage(
-          `Note '${note.content}' was already removed from server`
-        )
-        setTimeout(() => {
-          setErrorMessage(null)
-        }, 5000)
-        //setNotes(notes.filter(n => n.id !== id))
-      })
+  //   noteService
+  //     .update(id, changedNote)
+  //     .then(returnedNote => {
+  //       //setNotes(notes.map(note => (note.id === id ? returnedNote : note)))
+  //     })
+  //     .catch(error => {
+  //       setErrorMessage(
+  //         `Note '${note.content}' was already removed from server`
+  //       )
+  //       setTimeout(() => {
+  //         setErrorMessage(null)
+  //       }, 5000)
+  //       //setNotes(notes.filter(n => n.id !== id))
+  //     })
 
-  }
+  // }
 
   const loginForm = () => (
     <Togglable buttonLabel="login">
@@ -88,7 +89,7 @@ const NoteList =  ({ notes }) => {
   return (
     <div>
       <h1>Notes</h1>
-      <Notification message={errorMessage} />
+      {/* <Notification message={errorMessage} /> */}
 
       {!user && loginForm()}
       {user && (
@@ -97,8 +98,36 @@ const NoteList =  ({ notes }) => {
           <button onClick={() => handleLogout()}>logout</button>
         </>
       )}
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>content</TableCell>
+              <TableCell>user</TableCell>
+              <TableCell>important</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {notes.map(note => (
+              <TableRow key={note.id}>
+                <TableCell>
+                  <Link to={`/notes/${note.id}`}>
+                    {note.content}
+                  </Link>
+                </TableCell>
+                <TableCell>
+                  {note.user.name}
+                </TableCell>
+                <TableCell>
+                  {note.important ? 'yes' : ''}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
 
-      <div>
+      {/* <div>
         <button onClick={() => setShowAll(!showAll)}>
           show {showAll ? 'important' : 'all'}
         </button>
@@ -109,7 +138,8 @@ const NoteList =  ({ notes }) => {
             <Link to={`/notes/${note.id}`}>{note.content}</Link>
           </li>
         ))}
-      </ul>
+      </ul> */}
+
     </div>
   )
 }
