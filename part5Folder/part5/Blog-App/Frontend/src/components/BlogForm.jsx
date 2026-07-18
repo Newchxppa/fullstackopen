@@ -18,10 +18,11 @@ const BlogForm = ({ createBlog }) => {
 
   return (
     <div className="form-Div">
+      <h3>Create a new blog</h3>
       <form className="blog-Form" onSubmit={addForm}>
 
         <div className="input-Div">
-          Enter Title <input className="title-Input" value={blogTitle} placeholder='Write title here'  onChange={event => setTitle(event.target.value)} />
+          Enter Title <input className="title-Input" value={blogTitle} placeholder='Write title here' onChange={event => setTitle(event.target.value)} />
         </div>
 
         <div className="input-Div">

@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 import { useState, useEffect } from 'react'
 import BlogForm from './components/BlogForm'
+import Blog from './components/Blog.jsx'
 import DisplayBlogs from './components/DisplayBlogs'
 import blogService from './services/blogs.js'
 import './App.css'
@@ -8,6 +9,7 @@ import LoginForm from './components/LoginForm'
 import loginService from './services/login.js'
 import Notification from './components/Notification.jsx'
 import Togglable from './components/Togglable.jsx'
+import { BrowserRouter as Router, Routes, Route, Link, useNavigate, useParams, useMatch } from 'react-router-dom'
 
 function App() {
   const [blogs, setBlogs] = useState([])
@@ -16,6 +18,8 @@ function App() {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState('')
   const [errMessage, setErrMessage] = useState(null)
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     blogService.getAll()
@@ -37,7 +41,6 @@ function App() {
     if(loggedInUser){
       const user = JSON.parse(loggedInUser)
       setUser(user)
-      console.log('USER:' ,user)
       blogService.setToken(user.token)
     }
   }, [])
@@ -46,6 +49,7 @@ function App() {
     blogService.create(blogObject)
       .then(blog => {
         setErrMessage(`Add: ${blogObject.title} by ${blogObject.author} has been added`)
+        navigate('/')
         setTimeout(() => {
           setErrMessage(null)
         }, 5000)
@@ -54,7 +58,7 @@ function App() {
       })
   }
 
-  const upvoteBlog = (index, blog) => {
+  const upvoteBlog = (blog) => {
     let copy = [...votes]
     copy = copy.map((item) => {
       if(item.id === blog.id){
@@ -98,6 +102,7 @@ function App() {
       setUser(user)
       setUsername('')
       setPassword('')
+      navigate('/')
     }
     catch{
       setErrMessage('wrong credentials')
@@ -122,21 +127,58 @@ function App() {
             blogs.filter(item => item.id !== blog.id)
           )
         })
+      navigate('/')
     }
 
   }
 
-  const noteForm = () => (
-    <Togglable buttonLabel="create new blog" closeLabel="close">
-      <BlogForm createBlog={addBlog}/>
-    </Togglable>
-  )
+  // const noteForm = () => (
+  //   <Togglable buttonLabel="create new blog" closeLabel="close">
+  //     <BlogForm createBlog={addBlog}/>
+  //   </Togglable>
+  // )
+
+  const padding = {
+    padding: 5
+  }
+  const match = useMatch('/blogs/:id')
+  const blog = match ? blogs.find(blog => blog.id === match.params.id) : null
 
   return (
     <div>
       <h1 className="app-Title">Blog Saver</h1>
       <h3 className="app-SubTitle">Save your favorite blogs!</h3>
+      <div>
+        <Link style={padding} to='/'>blogs</Link>
+        <Link style={padding} to='/create'>new blog</Link>
+        {!user && (
+          <Link style={padding} to='/login'>login</Link>
+        )}
+        {user && (
+          <button onClick={() => handleLogout()}>logout</button>
+        )}
+      </div>
       <Notification message={errMessage} />
+
+      <Routes>
+        <Route path='/blogs/:id' element={
+          <Blog blog={blog} user={user} deleteBlog={deleteBlog} displayLike={displayBlogLikes} upVoteBlog={upvoteBlog} />
+        } />
+        <Route path='/create' element={
+          <>
+            {!user && (<p>Login to save blogs</p>)}
+            {user && <BlogForm createBlog={addBlog} />}
+          </>
+        }/>
+        <Route path='/login' element={
+          <LoginForm addLogin={handleLogin} password={password} handlePassword={handlePassword} handleUsername={handleUsername} username={username} />
+        }/>
+        <Route path='/' element={
+          <DisplayBlogs blogs={blogs} upvoteBlog={upvoteBlog} votes={votes} user={user} displayLike={displayBlogLikes} deleteBlog={deleteBlog} />
+        }/>
+
+      </Routes>
+      {/* <Notification message={errMessage} />
 
       {!user && (<LoginForm addLogin={handleLogin} password={password} handlePassword={handlePassword} handleUsername={handleUsername} username={username} />)}
       {user && (
@@ -145,7 +187,7 @@ function App() {
         </div>
       )}
       {user && noteForm()}
-      {user && <DisplayBlogs blogs={blogs} upVoteBlog={upvoteBlog} votes={votes} user={user} displayLike={displayBlogLikes} deleteBlog={deleteBlog} />}
+      {user && <DisplayBlogs blogs={blogs} upVoteBlog={upvoteBlog} votes={votes} user={user} displayLike={displayBlogLikes} deleteBlog={deleteBlog} />} */}
 
 
     </div>

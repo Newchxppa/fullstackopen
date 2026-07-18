@@ -1,4 +1,5 @@
 import Togglable from './Togglable'
+import { Link } from 'react-router-dom'
 
 const VerifyUser = ({ user, blog, deleteBlog }) => {
   const foundBlogUser = blog?.user?.username
@@ -7,7 +8,6 @@ const VerifyUser = ({ user, blog, deleteBlog }) => {
     return null
   }
   if(foundBlogUser === foundUser){
-    console.log('IN HERRE BUDDY')
     return (
       <div>
         <button onClick={() => deleteBlog(blog)} className="remove-BlogButton">remove</button>
@@ -20,7 +20,6 @@ const VerifyUser = ({ user, blog, deleteBlog }) => {
 
 const DisplayBlogSavedBy = ({ user, blog, deleteBlog }) => {
   const savedBy = blog?.user?.username || user?.username
-  console.log(user, blog)
   if(!savedBy){
     return null
   }
@@ -49,23 +48,27 @@ const DisplayBlogs = ({ blogs, upVoteBlog, deleteBlog, user, displayLike }) => {
       <div>
         <h2>Saved Blogs</h2>
         {blogs.map((blog, i) =>
-          <div key={i}>
-            <p className="blog-P">
-              <span className="blog-Span">Title:</span> {blog.title}
-            </p>
-            <p className="blog-P">
-              <span className="blog-Span">Author:</span> {blog.author}
-            </p>
-            <Togglable buttonLabel="view" closeLabel="hide">
-              <p className="blog-P">
-                <span className="blog-Span">Link:</span> {blog.link}
-              </p>
-              <DisplayBlogSavedBy user={user} blog={blog} deleteBlog={deleteBlog} />
-              {/* <VerifyUser user={user} blog={blog} deleteBlog={deleteBlog}  /> */}
-              <span className="votes-Span">{displayLike(blog.id)} votes</span>
-              <button className="votes-Button" onClick={() => upVoteBlog(i, blog)}>upvote</button>
-            </Togglable>
-          </div>
+          <ul key={blog.id}>
+            <li key={blog.id}><Link to={`/blogs/${blog.id}`}>{blog.title} by {blog.author}</Link></li>
+          </ul>
+          // <div key={i}>
+          //   <p className="blog-P">
+          //     <span className="blog-Span">Title: </span>
+          //     <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+          //   </p>
+          //   <p className="blog-P">
+          //     <span className="blog-Span">Author:</span> {blog.author}
+          //   </p>
+          //   <Togglable buttonLabel="view" closeLabel="hide">
+          //     <p className="blog-P">
+          //       <span className="blog-Span">Link:</span> {blog.link}
+          //     </p>
+          //     <DisplayBlogSavedBy user={user} blog={blog} deleteBlog={deleteBlog} />
+          //     {/* <VerifyUser user={user} blog={blog} deleteBlog={deleteBlog}  /> */}
+          //     <span className="votes-Span">{displayLike(blog.id)} votes</span>
+          //     <button className="votes-Button" onClick={() => upVoteBlog(i, blog)}>upvote</button>
+          //   </Togglable>
+          // </div>
         )}
       </div>
     )
