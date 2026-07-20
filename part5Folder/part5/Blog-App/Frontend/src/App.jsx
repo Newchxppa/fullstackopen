@@ -8,8 +8,8 @@ import './App.css'
 import LoginForm from './components/LoginForm'
 import loginService from './services/login.js'
 import Notification from './components/Notification.jsx'
-import Togglable from './components/Togglable.jsx'
-import { BrowserRouter as Router, Routes, Route, Link, useNavigate, useParams, useMatch } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Link, useNavigate, useMatch } from 'react-router-dom'
+import { AppBar, Button, Toolbar, Typography } from '@mui/material'
 
 function App() {
   const [blogs, setBlogs] = useState([])
@@ -17,7 +17,7 @@ function App() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState('')
-  const [errMessage, setErrMessage] = useState(null)
+  const [notification, setNotification] = useState(null)
 
   const navigate = useNavigate()
 
@@ -48,10 +48,10 @@ function App() {
   const addBlog = (blogObject) => {
     blogService.create(blogObject)
       .then(blog => {
-        setErrMessage(`Add: ${blogObject.title} by ${blogObject.author} has been added`)
+        setNotification({ text: `${blogObject.title} by ${blogObject.author} has been added`, type: 'success' })
         navigate('/')
         setTimeout(() => {
-          setErrMessage(null)
+          setNotification(null)
         }, 5000)
         setVotes(votes.concat({ likes: blog.likes, id: blog.id }))
         setBlogs(blogs.concat(blog))
@@ -83,13 +83,6 @@ function App() {
     return like.likes
   }
 
-  const handleUsername = event => {
-    setUsername(event.target.value)
-  }
-
-  const handlePassword = event => {
-    setPassword(event.target.value)
-  }
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -105,9 +98,9 @@ function App() {
       navigate('/')
     }
     catch{
-      setErrMessage('wrong credentials')
+      setNotification({ text: 'wrong credentials', type: 'error' })
       setTimeout(() => {
-        setErrMessage(null)
+        setNotification(null)
       }, 5000)
     }
   }
@@ -115,6 +108,7 @@ function App() {
   const handleLogout = () => {
     if(window.confirm('Are you sure you want to logout?')){
       window.localStorage.removeItem('blogAppUser')
+      navigate('/')
       location.reload()
     }
   }
@@ -132,64 +126,46 @@ function App() {
 
   }
 
-  // const noteForm = () => (
-  //   <Togglable buttonLabel="create new blog" closeLabel="close">
-  //     <BlogForm createBlog={addBlog}/>
-  //   </Togglable>
-  // )
-
-  const padding = {
-    padding: 5
-  }
   const match = useMatch('/blogs/:id')
   const blog = match ? blogs.find(blog => blog.id === match.params.id) : null
 
+  const style = { '&:hover': { bgcolor: 'rgba(162, 212, 224, 0.3)' } }
   return (
-    <div>
-      <h1 className="app-Title">Blog Saver</h1>
-      <h3 className="app-SubTitle">Save your favorite blogs!</h3>
+    <div className='blog-Div'>
       <div>
-        <Link style={padding} to='/'>blogs</Link>
-        <Link style={padding} to='/create'>new blog</Link>
-        {!user && (
-          <Link style={padding} to='/login'>login</Link>
-        )}
-        {user && (
-          <button onClick={() => handleLogout()}>logout</button>
-        )}
+        <AppBar position='static'>
+          <Toolbar>
+            <Typography variant='h6' component="div" sx={{ flexGrow: 1 }}>Blog App</Typography>
+            <Button color='inherit' component={Link} to="/" sx={style}>blogs</Button>
+            {user && (
+              <Button color='inherit' component={Link} to="/create" sx={style}>new blog</Button>
+            )}
+            {!user && (
+              <Button color='inherit' component={Link} to="/login" sx={style}>login</Button>
+            )}
+            {user && (
+              <Button onClick={() => handleLogout()} color='inherit' sx={style}>logout</Button>
+            )}
+          </Toolbar>
+        </AppBar>
       </div>
-      <Notification message={errMessage} />
-
+      <Notification notification={notification} />
       <Routes>
         <Route path='/blogs/:id' element={
           <Blog blog={blog} user={user} deleteBlog={deleteBlog} displayLike={displayBlogLikes} upVoteBlog={upvoteBlog} />
         } />
         <Route path='/create' element={
           <>
-            {!user && (<p>Login to save blogs</p>)}
             {user && <BlogForm createBlog={addBlog} />}
           </>
         }/>
         <Route path='/login' element={
-          <LoginForm addLogin={handleLogin} password={password} handlePassword={handlePassword} handleUsername={handleUsername} username={username} />
+          <LoginForm addLogin={handleLogin} password={password} handlePassword={setPassword} handleUsername={setUsername} username={username}  />
         }/>
         <Route path='/' element={
           <DisplayBlogs blogs={blogs} upvoteBlog={upvoteBlog} votes={votes} user={user} displayLike={displayBlogLikes} deleteBlog={deleteBlog} />
         }/>
-
       </Routes>
-      {/* <Notification message={errMessage} />
-
-      {!user && (<LoginForm addLogin={handleLogin} password={password} handlePassword={handlePassword} handleUsername={handleUsername} username={username} />)}
-      {user && (
-        <div>
-          <button className="logout-Button" onClick={() => {handleLogout()}}>Log Out</button>
-        </div>
-      )}
-      {user && noteForm()}
-      {user && <DisplayBlogs blogs={blogs} upVoteBlog={upvoteBlog} votes={votes} user={user} displayLike={displayBlogLikes} deleteBlog={deleteBlog} />} */}
-
-
     </div>
   )
 }

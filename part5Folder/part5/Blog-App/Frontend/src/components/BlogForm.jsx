@@ -1,3 +1,4 @@
+import { Box, Button, TextField } from '@mui/material'
 import { useState } from 'react'
 const BlogForm = ({ createBlog }) => {
   const [blogTitle, setTitle] = useState('')
@@ -20,20 +21,20 @@ const BlogForm = ({ createBlog }) => {
     <div className="form-Div">
       <h3>Create a new blog</h3>
       <form className="blog-Form" onSubmit={addForm}>
+        <Box>
+          <div className="input-Div">
+            <TextField sx={{ width: '35ch', marginBottom: 1  }} size='small' id='outlined-basic' label="Enter title" variant='outlined' value={blogTitle} onChange={event => setTitle(event.target.value)} />
+          </div>
 
-        <div className="input-Div">
-          Enter Title <input className="title-Input" value={blogTitle} placeholder='Write title here' onChange={event => setTitle(event.target.value)} />
-        </div>
+          <div className="input-Div">
+            <TextField sx={{ width: '35ch', marginBottom: 1 }} size='small' id='outlined-basic' label="Enter author" variant='outlined' value={blogAuthor} onChange={event => setAuthor(event.target.value)} />
+          </div>
 
-        <div className="input-Div">
-          Enter Author <input className="author-Input" value={blogAuthor} placeholder='Write author here' onChange={event => setAuthor(event.target.value)} />
-        </div>
-
-        <div className="input-Div">
-          Enter URL <input className="url-Input" value={url} placeholder='Write link here' onChange={event => setURL(event.target.value)} />
-        </div>
-
-        <button className="form-Submit-Button">Submit</button>
+          <div className="input-Div">
+            <TextField sx={{ width: '35ch', marginBottom: 1 }} size='small' id='outlined-basic' label="Enter link" variant='outlined' value={url} onChange={event => setURL(event.target.value)} />
+          </div>
+        </Box>
+        <Button variant='contained' type='submit'>Submit</Button>
       </form>
     </div>
   )

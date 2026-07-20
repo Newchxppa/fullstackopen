@@ -1,22 +1,14 @@
-const Notification = ( { message } ) => {
-  //console.log(message, 'jjjj')
+import { Alert } from '@mui/material'
 
-  if (message === null){
+const Notification = ( { notification } ) => {
+  if (notification === null){
     return null
-  }
-  else if (message.includes('Add: ')){
-    const text = message.replace('Add: ', '')
-    return (
-      <div className="add-Noti">
-        {text}
-      </div>
-    )
   }
 
   return (
-    <div className="error">
-      {message}
-    </div>
+    <Alert variant='outlined' style={{ marginTop: 15, marginBottom: 10 }} severity={notification.type}>
+      {notification.text}
+    </Alert>
   )
 }
 
