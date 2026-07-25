@@ -1,15 +1,12 @@
-import Display from './Display'
-import Controls from './Controls'
+import NoteList from './components/NoteList'
+import NoteForm from './components/NoteForm'
 
-function App() {
+const App = () => (
+  <div>
+    <NoteForm />
+    <NoteList />
+  </div>
+)
 
-
-  return (
-    <>
-      <Display />
-      <Controls />
-    </>
-  )
-}
 
 export default App
