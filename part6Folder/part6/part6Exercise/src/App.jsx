@@ -1,8 +1,13 @@
+import Feedback from './Feedback'
+import Statistics from './Statistics'
 
-function App() {
+const App = () => {
   return (
-    <>
-    </>
+    <div>
+      <h1>Unicafe</h1>
+      <Feedback />
+      <Statistics />
+    </div>
   )
 }
 
