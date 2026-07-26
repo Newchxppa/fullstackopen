@@ -3,8 +3,11 @@ import { useAncedotes, useAncedotesActions } from './store'
 const AnecdoteList = () => {
   const ancedotes = useAncedotes()
   const { upVote } = useAncedotesActions()
+
   ancedotes.sort((a,b) => b.votes - a.votes)
-  return(
+
+
+  return (
     <div>
       <h1>Anecdotes</h1>
       {ancedotes.map(item =>

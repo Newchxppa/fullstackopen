@@ -2,7 +2,7 @@ import { create } from 'zustand'
 
 
 const generateId = () => {
-  return Math.random(1000000000)
+  return Math.random(1000000000).toFixed(0)
 }
 
 const useAncedoteStore = create(set => ({
@@ -32,6 +32,7 @@ const useAncedoteStore = create(set => ({
     id: 5,
   }
   ],
+  filter: '',
   actions: {
     upVote: id => set(
       state => ({
@@ -42,9 +43,14 @@ const useAncedoteStore = create(set => ({
     ),
     add: content => set(
       state => ({ ancedote: state.ancedote.concat({ content: content, votes: 0, id: generateId() }) })
-    )
+    ),
+    setFilter: value => set({ filter: value })
   }
 }))
 
-export const useAncedotes = () => useAncedoteStore(state => state.ancedote)
+export const useAncedotes = () => {
+  const ancedotes = useAncedoteStore(state => state.ancedote)
+  const filter = useAncedoteStore(state => state.filter)
+  return ancedotes.filter(item => item.content.toLowerCase().includes(filter.toLowerCase()))
+}
 export const useAncedotesActions = () => useAncedoteStore(state => state.actions)
