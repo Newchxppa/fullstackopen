@@ -1,14 +1,12 @@
-import Feedback from './Feedback'
-import Statistics from './Statistics'
+import AnecdoteList from './components/AnecdoteList'
+import AnecdoteForm from './components/AnecdoteForm'
 
-const App = () => {
-  return (
-    <div>
-      <h1>Unicafe</h1>
-      <Feedback />
-      <Statistics />
-    </div>
-  )
-}
+const App = () => (
+  <div>
+    <AnecdoteList />
+    <AnecdoteForm />
+  </div>
+)
+
 
 export default App
