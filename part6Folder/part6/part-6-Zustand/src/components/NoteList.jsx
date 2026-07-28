@@ -1,4 +1,4 @@
-import { useNotes } from '../store'
+import { useNotes } from '../notestore'
 import Note from './Note.jsx'
 
 const NoteList = () => {

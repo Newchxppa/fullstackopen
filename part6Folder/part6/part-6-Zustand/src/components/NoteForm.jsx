@@ -1,4 +1,4 @@
-import { useNotesActions } from '../store'
+import { useNotesActions } from '../notestore'
 
 const NoteForm = () => {
   const { add } = useNotesActions()
