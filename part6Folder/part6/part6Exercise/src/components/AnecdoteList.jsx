@@ -6,8 +6,6 @@ const AnecdoteList = () => {
   const { upVote, remove } = useAncedotesActions()
   const { setText } = useNotiAction()
 
-  ancedotes.sort((a,b) => b.votes - a.votes)
-
   const handleupVote = (item) => {
     upVote(item.id)
     setText(`You upvoted ${item.content}`)

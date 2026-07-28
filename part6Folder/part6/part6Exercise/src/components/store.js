@@ -9,7 +9,7 @@ const useAncedoteStore = create((set, get) => ({
     upVote: async (id) => {
       const ancedote = get().ancedote.find(n => n.id === id)
       const updatedAncedote = await ancedoteService.updateAncedote(
-        id, { ...ancedote, votes: ancedote.votes += 1 }
+        id, { ...ancedote, votes: ancedote.votes + 1 }
       )
       set(state => ({
         ancedote: state.ancedote.map(item =>
@@ -38,7 +38,9 @@ export const useAncedotes = () => {
   const ancedotes = useAncedoteStore(state => state.ancedote)
   const filter = useAncedoteStore(state => state.filter)
   if (filter === '')
-    return ancedotes
-  return ancedotes.filter(item => item.content.toLowerCase().includes(filter.toLowerCase()))
+    return ancedotes.sort((a,b) => b.votes - a.votes)
+  return ancedotes.filter(item => item.content.toLowerCase().includes(filter.toLowerCase())).sort((a, b) => b.votes - a.votes)
 }
 export const useAncedotesActions = () => useAncedoteStore(state => state.actions)
+
+export default useAncedoteStore
