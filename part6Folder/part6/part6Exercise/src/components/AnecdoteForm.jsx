@@ -1,15 +1,14 @@
-import { useNotiAction } from './notis'
 import { useAnecdote } from '../hooks/useAnecdote'
+import { useText } from '../hooks/useContext'
 
 const AnecdoteForm = () => {
-  const { setText } = useNotiAction()
+  const { setText } = useText()
   const { add } = useAnecdote()
 
   const addAnecdote = (event) => {
     event.preventDefault()
     const content = event.target.create.value
     add(content)
-
     setText(`You added ${content}`)
     setTimeout(() => {
       setText(null)

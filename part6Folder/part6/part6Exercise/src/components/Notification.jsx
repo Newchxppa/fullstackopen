@@ -1,7 +1,7 @@
-import { useNotiText } from './notis'
+import { useText } from '../hooks/useContext'
 
 const Notification = () => {
-  const  text  = useNotiText()
+  const { text } = useText()
 
   const style = {
     border: 'solid',
@@ -9,6 +9,7 @@ const Notification = () => {
     borderWidth: 1,
     marginBottom: 10
   }
+
   if(!text){
     return null
   }
