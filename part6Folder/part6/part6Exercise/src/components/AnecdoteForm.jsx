@@ -1,9 +1,9 @@
-import { useAncedotesActions } from './store'
 import { useNotiAction } from './notis'
+import { useAnecdote } from '../hooks/useAnecdote'
 
 const AnecdoteForm = () => {
-  const { add } = useAncedotesActions()
   const { setText } = useNotiAction()
+  const { add } = useAnecdote()
 
   const addAnecdote = (event) => {
     event.preventDefault()
