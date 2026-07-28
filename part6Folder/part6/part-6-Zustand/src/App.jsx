@@ -1,25 +1,37 @@
-import NoteList from './components/NoteList'
-import NoteForm from './components/NoteForm'
-import VisibilityFilter from './components/VisibilityFilter'
-import { useEffect } from 'react'
-import { useNotesActions } from './notestore'
-
+import { useNotes } from './hooks/useNotes'
 const App = () => {
-  const { initialize } = useNotesActions()
+  const { notes, isPending, addNote: addNoteToServer, toggleImportance } = useNotes()
 
-  useEffect(() => {
-    initialize()
-  }, [initialize])
+  const addNote = async (event) => {
+    event.preventDefault()
+    const content = event.target.note.value
+    event.target.reset()
+    addNoteToServer.mutate({ content, important: true })
+  }
 
 
-  return(
+  if (isPending) {
+    return <div>loading data...</div>
+  }
+
+
+  return (
     <div>
-      <NoteForm />
-      <VisibilityFilter />
-      <NoteList />
+      <h2>Notes app</h2>
+      <form onSubmit={addNote}>
+        <input name="note" />
+        <button type="submit">add</button>
+      </form>
+      {notes.map((note) => (
+        <li key={note.id} onClick={() => toggleImportance(note)}>
+          {note.important ? <strong>{note.content}</strong> : note.content}
+          <button onClick={() => toggleImportance(note.id)}>
+            {note.important ? 'make not important' : 'make important'}
+          </button>
+        </li>
+      ))}
     </div>
   )
 }
-
 
 export default App
