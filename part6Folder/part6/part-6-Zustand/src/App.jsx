@@ -1,35 +1,14 @@
-import { useNotes } from './hooks/useNotes'
+import Footer from './components/Footer'
+import Navbar from './components/Navbar'
+import Panel from './components/Panel'
+
 const App = () => {
-  const { notes, isPending, addNote: addNoteToServer, toggleImportance } = useNotes()
-
-  const addNote = async (event) => {
-    event.preventDefault()
-    const content = event.target.note.value
-    event.target.reset()
-    addNoteToServer.mutate({ content, important: true })
-  }
-
-
-  if (isPending) {
-    return <div>loading data...</div>
-  }
-
 
   return (
     <div>
-      <h2>Notes app</h2>
-      <form onSubmit={addNote}>
-        <input name="note" />
-        <button type="submit">add</button>
-      </form>
-      {notes.map((note) => (
-        <li key={note.id} onClick={() => toggleImportance(note)}>
-          {note.important ? <strong>{note.content}</strong> : note.content}
-          <button onClick={() => toggleImportance(note.id)}>
-            {note.important ? 'make not important' : 'make important'}
-          </button>
-        </li>
-      ))}
+      <Navbar />
+      <Panel />
+      <Footer />
     </div>
   )
 }

@@ -1,12 +1,10 @@
 import { createRoot } from 'react-dom/client'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-
 import App from './App.jsx'
+import { CounterContextProvider } from './components/CounterContext.jsx'
 
-const queryClient = new QueryClient()
 
 createRoot(document.getElementById('root')).render(
-  <QueryClientProvider client={queryClient}>
+  <CounterContextProvider>
     <App />
-  </QueryClientProvider>
+  </CounterContextProvider>
 )
